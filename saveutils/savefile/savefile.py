@@ -11,16 +11,18 @@ class SaveFile:
     Represents a Shadows of Doubt save file.
     """
 
-    def __init__(self, path: Optional[str] = None, verbose: bool = False) -> None:
+    def __init__(self, path: Optional[str] = None, verbose: bool = False, locked: bool = False) -> None:
         """
         Creates a new SaveFile instance.
 
         :param path: Path to the save file.
         :param verbose: Whether to enable verbose logging.
+        :param locked: Whether to lock the save file. (Do not allow the file to be saved)
         """
         self.path = path
         self.data = None
         self.parse_time = None
+        self.locked = locked
 
         self.logger = None
         self.init_logger(verbose)
@@ -124,6 +126,10 @@ class SaveFile:
 
         if not path:
             path = self.path
+
+        if self.locked:
+            if path == self.path:
+                raise Exception("Save file is locked")
 
         self.logger.debug(f"Saving {path}")
         try:
