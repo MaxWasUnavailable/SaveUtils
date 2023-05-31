@@ -182,3 +182,21 @@ class SaveFile:
         Returns the current game length.
         """
         return self.data.get("gameLength")
+
+    def get_player_firstname(self) -> str:
+        """
+        Returns the player character's first name.
+        """
+        return self.data.get("playerFirstName")
+
+    def get_player_surname(self) -> str:
+        """
+        Returns the player character's surname.
+        """
+        return self.data.get("playerSurname")
+
+    def get_money(self) -> int:
+        """
+        Returns the player's money.
+        """
+        return self.data.get("money")
