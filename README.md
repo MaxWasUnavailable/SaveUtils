@@ -103,6 +103,32 @@ This system should make it a bit more realistic, and also make it a bit more cha
 > cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" migrate -n -o "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My New Save File.sod"
 > ```
 
+#### Size Analysis
+
+The size analysis tool allows you to see the size of the save file, and the size of the different sections of the save
+file.
+
+Save files are JSON files, so each key-value pair is analysed individually.
+
+This allows us to very easily see which sections of the save file take up the most space.
+
+> Example:
+> - Analyse the size of `My Save File.sod`:
+> ```shell
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" sizeanalysis
+> ```
+>
+> - Analyse the size of `My Save File.sod`, and save an HTML report to `report.html`:
+> ```shell
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" sizeanalysis -r
+> ```
+
+## Contributing
+
+Contributions are welcome, and can be made by opening a pull request.
+
+You can contact me on Discord at `Max#0007`.
+
 ## Authors
 
 * [MaxWasTaken](https://github.com/MaxWasUnavailable)
