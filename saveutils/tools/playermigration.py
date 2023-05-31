@@ -123,7 +123,7 @@ def register_subparser(main_subparser) -> None:
     Registers the player migration subparser.
     :param main_subparser: The main parser's subparser
     """
-    migration_parser = main_subparser.add_parser("migrate", help="Migrates the player from one save to another.")
+    migration_parser = main_subparser.add_parser("migrate", help=description, description=description)
     migration_parser.add_argument('-o', '--output', type=str, required=True, help="The output save file.")
     migration_parser.add_argument('-n', '--newgameplus', action="store_true",
                                   help="Whether to migrate the player using the new game plus system.")

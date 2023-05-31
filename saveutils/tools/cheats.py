@@ -97,7 +97,7 @@ def register_subparser(main_subparser) -> None:
     Registers the cheats subparser.
     :param main_subparser: The main parser's subparser
     """
-    money_parser = main_subparser.add_parser("money", help="Money cheats")
+    money_parser = main_subparser.add_parser("money", help=description, description=description)
     money_parser.add_argument("amount", type=int, help="The amount of money to add or remove")
     money_parser.add_argument("-a", "--add", action="store_true", help="Add money to your character's bank account")
     money_parser.add_argument("-r", "--remove", action="store_true",
