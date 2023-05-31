@@ -13,6 +13,9 @@ class PlayerMigration:
         """
         Migrates the player from one save to another.
         """
+        original_locked = source_save.locked
+        source_save.locked = True
+
         print("Migrating player...")
         migration_data = dict()
 
@@ -73,3 +76,5 @@ class PlayerMigration:
         # Then, we save the target save
         target_save.save()
         print("Migration complete!")
+
+        source_save.locked = original_locked
