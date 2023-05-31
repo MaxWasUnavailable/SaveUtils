@@ -13,6 +13,7 @@ class PlayerMigration:
         """
         Migrates the player from one save to another.
         """
+        print("Migrating player...")
         migration_data = dict()
 
         # First move character-specific data
@@ -71,3 +72,4 @@ class PlayerMigration:
 
         # Then, we save the target save
         target_save.save()
+        print("Migration complete!")
