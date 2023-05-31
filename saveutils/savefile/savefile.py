@@ -3,7 +3,7 @@ import shutil
 from datetime import datetime
 from logging import getLogger, StreamHandler, Formatter
 from time import time
-from typing import Optional, List
+from typing import Optional, List, Any
 
 
 class SaveFile:
@@ -34,7 +34,7 @@ class SaveFile:
 
         :param verbose: Whether to enable verbose logging.
         """
-        self.logger = getLogger(self.__class__.__name__)
+        self.logger = getLogger(self.__class__.__name__ + str(id(self)))
         handler = StreamHandler()
         handler.setFormatter(Formatter("[%(asctime)s][%(name)s][%(levelname)s] %(message)s"))
         self.logger.addHandler(handler)
