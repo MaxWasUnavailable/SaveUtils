@@ -1,6 +1,15 @@
+from logging import getLogger, StreamHandler, Formatter
+
 from savefile.savefile import SaveFile
+from tools.cheats import MoneyCheats
 
 description = "A tool for migrating a character from one save to another."
+
+logger = getLogger(__name__)
+logger.setLevel("INFO")
+handler = StreamHandler()
+handler.setFormatter(Formatter("[%(asctime)s][%(name)s][%(levelname)s] %(message)s"))
+logger.addHandler(handler)
 
 
 class PlayerMigration:
@@ -16,7 +25,7 @@ class PlayerMigration:
         original_locked = source_save.locked
         source_save.locked = True
 
-        print("Migrating player...")
+        logger.info("Migrating player...")
         migration_data = dict()
 
         # First move character-specific data
@@ -75,6 +84,6 @@ class PlayerMigration:
 
         # Then, we save the target save
         target_save.save()
-        print("Migration complete!")
+        logger.info("Migration complete!")
 
         source_save.locked = original_locked
