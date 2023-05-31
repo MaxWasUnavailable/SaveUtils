@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from logging import getLogger, StreamHandler, Formatter
 from time import time
 from typing import Optional
@@ -89,3 +90,58 @@ class SaveFile:
         save = cls()
         save.parse_file(path)
         return save
+
+    def get_build(self) -> str:
+        """
+        Returns the build of the save file.
+        """
+        return self.data.get("build")
+
+    def get_cityshare(self) -> str:
+        """
+        Returns the cityshare of the save file.
+        """
+        return self.data.get("cityShare")
+
+    def get_seed(self) -> str:
+        """
+        Returns the seed of the save file.
+
+        More common name wrapper for get_cityshare().
+        """
+        return self.get_cityshare()
+
+    def get_savetime(self) -> datetime:
+        """
+        Returns the save's datetime when it was saved.
+        """
+        save_time = self.data.get("saveTime")
+        try:
+            return datetime.strptime(save_time, "%Y-%d-%m-%H-%M-%S.%f")
+        except Exception as e:
+            self.logger.exception(f"Failed to parse save time: {save_time}")
+            raise e
+
+    def get_gametime(self) -> float:
+        """
+        Returns the game time of the save file.
+        """
+        return self.data.get("gameTime")
+
+    def get_case_id(self) -> int:
+        """
+        Returns the case ID of the save file.
+        """
+        return self.data.get("assignCaseID")
+
+    def get_murder_id(self) -> int:
+        """
+        Returns the murder ID of the save file.
+        """
+        return self.data.get("assignMurderID")
+
+    def get_gamelength(self) -> int:
+        """
+        Returns the current game length.
+        """
+        return self.data.get("gameLength")
