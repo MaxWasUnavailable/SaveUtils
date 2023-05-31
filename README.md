@@ -1,5 +1,7 @@
 # SaveUtils
 
+[![Build-All-Platforms](https://github.com/MaxWasUnavailable/SaveUtils/actions/workflows/build.yml/badge.svg)](https://github.com/MaxWasUnavailable/SaveUtils/actions/workflows/build.yml)
+
 ## About
 
 SaveUtils is a simple library and command line tool for interacting with Shadows of Doubt save files.
