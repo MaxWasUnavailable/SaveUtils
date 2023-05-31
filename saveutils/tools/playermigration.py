@@ -136,7 +136,7 @@ def handle_subparser(args) -> None:
     Handles the player migration subparser.
     :param args: The arguments
     """
-    if args.playermigration == "migrate":
+    if args.tool == "migrate":
         source_save = args.save
         target_save = SaveFile(args.output, args.verbose)
 

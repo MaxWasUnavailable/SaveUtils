@@ -123,7 +123,7 @@ def handle_subparser(args) -> None:
     """
     save: SaveFile = args.save
 
-    if args.cheats == "money":
+    if args.tool == "money":
         if args.add:
             MoneyCheats.add_money(save, args.amount)
             save.save()

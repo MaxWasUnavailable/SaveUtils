@@ -22,8 +22,8 @@ if __name__ == '__main__':
 
     args.save = save
 
-    if args.cheats:
+    if args.tool in ["money", "health"]:
         cheats_handle_subparser(args)
 
-    if args.playermigration:
+    if args.tool in ["migrate"]:
         playermigration_handle_subparser(args)
