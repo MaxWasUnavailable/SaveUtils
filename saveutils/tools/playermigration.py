@@ -87,3 +87,32 @@ class PlayerMigration:
         logger.info("Migration complete!")
 
         source_save.locked = original_locked
+
+    @staticmethod
+    def new_game_plus(source_save: SaveFile, target_save: SaveFile, travel_expenses: int = 20000):
+        """
+        Migrates the player, but only if they can afford the "travel expenses".
+
+        Will sell all apartments for a flat 2k fee.
+        """
+        logger.info("Migrating to new game plus...")
+        apartment_count = len(source_save.get_apartments_owned())
+
+        total_worth = source_save.get_money() + (apartment_count * 2000)
+
+        if total_worth < travel_expenses:
+            logger.info(
+                f"Player cannot afford travel expenses. Required: {travel_expenses}, Available (with apartment sales): {total_worth}")
+            return
+
+        new_money = total_worth - travel_expenses
+
+        logger.info(
+            f"Player can afford travel expenses. Required: {travel_expenses}, Available (with apartment sales): {total_worth}, New money: {new_money}")
+
+        old_money = source_save.get_money()
+        MoneyCheats.set_money(source_save, new_money)
+
+        PlayerMigration.migrate_player(source_save, target_save)
+
+        MoneyCheats.set_money(source_save, old_money)
