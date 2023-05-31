@@ -77,7 +77,7 @@ def handle_subparser(args) -> None:
                 report.write("<html><body><table><tr><th>Key</th><th>Size</th><th>Percentage</th></tr>")
                 for key, value in sorted_data:
                     report.write(
-                        f"<tr><td>{key}</td><td>{value['size']}</td><td>{round(value['percentage'], 3)}</td></tr>")
+                        f"\n<tr><td>{key}</td><td>{value['size']}</td><td>{round(value['percentage'], 3)}</td></tr>")
                 report.write("</table></body></html>")
         else:
             for key, value in sorted_data:
