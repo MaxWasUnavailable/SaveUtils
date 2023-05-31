@@ -114,19 +114,25 @@ class SaveFile:
             raise e
         self.logger.debug(f"Created backup of {self.path} as {self.path + '.bak'}")
 
-    def save(self) -> None:
+    def save(self, path: str = None) -> None:
         """
         Saves the save file.
+
+        :param path: Path to save to. If not specified, saves to the original path.
         """
         self.backup()
-        self.logger.debug(f"Saving {self.path}")
+
+        if not path:
+            path = self.path
+
+        self.logger.debug(f"Saving {path}")
         try:
-            with open(self.path, "w", encoding="utf-8") as f:
+            with open(path, "w", encoding="utf-8") as f:
                 f.write(self.to_json_string())
         except Exception as e:
-            self.logger.exception(f"Failed to save {self.path}")
+            self.logger.exception(f"Failed to save {path}")
             raise e
-        self.logger.debug(f"Saved {self.path}")
+        self.logger.debug(f"Saved {path}")
 
     def get_data_keys(self) -> List[str]:
         """
