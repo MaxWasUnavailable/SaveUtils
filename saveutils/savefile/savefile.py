@@ -134,6 +134,53 @@ class SaveFile:
         """
         return list(self.data.keys())
 
+    def get_value(self, key: str, ignore_errors: bool = False) -> Any:
+        """
+        Gets a value from the save file.
+
+        :param key: Key to get.
+        :param ignore_errors: Whether to ignore errors.
+        """
+        self.logger.debug(f"Getting {key}")
+        try:
+            return self.data[key]
+        except Exception as e:
+            self.logger.exception(f"Failed to get {key}")
+            if not ignore_errors:
+                raise e
+            return None
+
+    def set_value(self, key: str, new_value: Any) -> None:
+        """
+        Sets a value in the save file.
+
+        :param key: Key to set.
+        :param new_value: New value to set.
+        """
+        self.logger.debug(f"Setting {key} to {new_value}")
+        try:
+            self.data[key] = new_value
+        except Exception as e:
+            self.logger.exception(f"Failed to set {key} to {new_value}")
+            raise e
+
+    def safe_set_value(self, key: str, new_value: Any) -> None:
+        """
+        Sets a value in the save file, but only if the value matches the original value's type, if the original value is None, or if the new value is None.
+
+        :param key: Key to set.
+        :param new_value: New value to set.
+        """
+        self.logger.debug(f"Safe setting {key} to {new_value}")
+        try:
+            if self.data[key] is None or type(self.data[key]) == type(new_value) or new_value is None:
+                self.data[key] = new_value
+            else:
+                raise TypeError(f"Type mismatch: {type(self.data[key])} != {type(new_value)}")
+        except Exception as e:
+            self.logger.exception(f"Failed to safe set {key} to {new_value}")
+            raise e
+
     def get_build(self) -> str:
         """
         Returns the build of the save file.
