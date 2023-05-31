@@ -10,9 +10,10 @@ parser = argparse.ArgumentParser(prog='SaveUtils', description='Shadows of Doubt
 parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose logging', default=False,
                     required=False)
 parser.add_argument('-i', '--input', type=str, help='The input save file path (absolute or relative)', required=True)
+tools_subparser = parser.add_subparsers(title="Tools", description="Tools", dest="tool")
 
-cheats_register_subparser(parser)
-playermigration_register_subparser(parser)
+cheats_register_subparser(tools_subparser)
+playermigration_register_subparser(tools_subparser)
 
 if __name__ == '__main__':
     args = parser.parse_args()

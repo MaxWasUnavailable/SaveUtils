@@ -1,4 +1,3 @@
-import argparse
 from logging import getLogger, StreamHandler, Formatter
 
 from savefile.savefile import SaveFile
@@ -119,16 +118,12 @@ class PlayerMigration:
         MoneyCheats.set_money(source_save, old_money)
 
 
-def register_subparser(main_parser: argparse.ArgumentParser) -> None:
+def register_subparser(main_subparser) -> None:
     """
     Registers the player migration subparser.
-    :param main_parser: The main parser
+    :param main_subparser: The main parser's subparser
     """
-    playermigration_parser = main_parser.add_subparsers(title="PlayerMigration", description=description,
-                                                        dest="playermigration")
-
-    migration_parser = playermigration_parser.add_parser("migrate",
-                                                         help="Migrates the player from one save to another.")
+    migration_parser = main_subparser.add_parser("migrate", help="Migrates the player from one save to another.")
     migration_parser.add_argument('-o', '--output', type=str, required=True, help="The output save file.")
     migration_parser.add_argument('-n', '--newgameplus', action="store_true",
                                   help="Whether to migrate the player using the new game plus system.")

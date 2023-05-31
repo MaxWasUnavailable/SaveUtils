@@ -1,4 +1,3 @@
-import argparse
 from logging import getLogger, StreamHandler, Formatter
 
 from savefile.savefile import SaveFile
@@ -92,15 +91,13 @@ class HealthCheats:
         logger.info(f"Current health: {current_health}")
 
 
-# Add the cheats subparser
-def register_subparser(main_parser: argparse.ArgumentParser) -> None:
+# Add the cheats subparsers
+def register_subparser(main_subparser) -> None:
     """
     Registers the cheats subparser.
-    :param main_parser: The main parser
+    :param main_subparser: The main parser's subparser
     """
-    cheats_parser = main_parser.add_subparsers(title="Cheats", description=description, dest="cheats")
-
-    money_parser = cheats_parser.add_parser("money", help="Money cheats")
+    money_parser = main_subparser.add_parser("money", help="Money cheats")
     money_parser.add_argument("amount", type=int, help="The amount of money to add or remove")
     money_parser.add_argument("-a", "--add", action="store_true", help="Add money to your character's bank account")
     money_parser.add_argument("-r", "--remove", action="store_true",
@@ -109,7 +106,7 @@ def register_subparser(main_parser: argparse.ArgumentParser) -> None:
     money_parser.add_argument("-p", "--print", action="store_true",
                               help="Print the current amount of money your character has")
 
-    health_parser = cheats_parser.add_parser("health", help="Health cheats")
+    health_parser = main_subparser.add_parser("health", help="Health cheats")
     health_parser.add_argument("amount", type=float, help="The amount of health to add or remove")
     health_parser.add_argument("-a", "--add", action="store_true", help="Add health to your character's health")
     health_parser.add_argument("-r", "--remove", action="store_true", help="Remove health from your character's health")
