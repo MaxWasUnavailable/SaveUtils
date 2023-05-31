@@ -5,6 +5,8 @@ from tools.cheats import handle_subparser as cheats_handle_subparser
 from tools.cheats import register_subparser as cheats_register_subparser
 from tools.playermigration import handle_subparser as playermigration_handle_subparser
 from tools.playermigration import register_subparser as playermigration_register_subparser
+from tools.sizeanalysis import handle_subparser as sizeanalysis_handle_subparser
+from tools.sizeanalysis import register_subparser as sizeanalysis_register_subparser
 
 parser = argparse.ArgumentParser(prog='SaveUtils', description='Shadows of Doubt SaveUtils')
 parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose logging', default=False,
@@ -14,6 +16,7 @@ tools_subparser = parser.add_subparsers(title="Tools", description="Tools", dest
 
 cheats_register_subparser(tools_subparser)
 playermigration_register_subparser(tools_subparser)
+sizeanalysis_register_subparser(tools_subparser)
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -27,3 +30,6 @@ if __name__ == '__main__':
 
     if args.tool in ["migrate"]:
         playermigration_handle_subparser(args)
+
+    if args.tool in ["sizeanalysis"]:
+        sizeanalysis_handle_subparser(args)
