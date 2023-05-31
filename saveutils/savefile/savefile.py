@@ -128,6 +128,12 @@ class SaveFile:
             raise e
         self.logger.debug(f"Saved {self.path}")
 
+    def get_data_keys(self) -> List[str]:
+        """
+        Returns the keys of the save file's data.
+        """
+        return list(self.data.keys())
+
     def get_build(self) -> str:
         """
         Returns the build of the save file.
@@ -205,9 +211,9 @@ class SaveFile:
         """
         Returns the player character's birthday.
 
-        Format: [year, month, day]
+        Format: [day, month, year]
         """
-        return [self.data.get("playerBirthYear"), self.data.get("playerBirthMonth"), self.data.get("playerBirthDay")]
+        return [self.data.get("playerBirthDay"), self.data.get("playerBirthMonth"), self.data.get("playerBirthYear")]
 
     def get_residence(self) -> int:
         """
