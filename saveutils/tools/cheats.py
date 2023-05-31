@@ -106,7 +106,7 @@ def register_subparser(main_subparser) -> None:
     money_parser.add_argument("-p", "--print", action="store_true",
                               help="Print the current amount of money your character has")
 
-    health_parser = main_subparser.add_parser("health", help="Health cheats")
+    health_parser = main_subparser.add_parser("health", help=description, description=description)
     health_parser.add_argument("amount", type=float, help="The amount of health to add or remove")
     health_parser.add_argument("-a", "--add", action="store_true", help="Add health to your character's health")
     health_parser.add_argument("-r", "--remove", action="store_true", help="Remove health from your character's health")
