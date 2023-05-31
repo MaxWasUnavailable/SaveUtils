@@ -154,6 +154,12 @@ class SaveFile:
         """
         return self.get_cityshare()
 
+    def get_city_name(self) -> str:
+        """
+        Returns the city name of the save file.
+        """
+        return self.get_cityshare().split(".")[0]
+
     def get_savetime(self) -> datetime:
         """
         Returns the save's datetime when it was saved.
