@@ -419,6 +419,12 @@ class SaveFile:
         """
         return self.data.get("keyring")
 
+    def get_books_read(self) -> List[str]:
+        """
+        Returns the player's books read.
+        """
+        return self.data.get("booksRead")
+
     def get_buildings(self) -> List[dict]:
         """
         Returns buildings in the city.
@@ -454,6 +460,12 @@ class SaveFile:
         Returns removed city data.
         """
         return self.data.get("removedCityData")
+
+    def get_addresses(self) -> List[dict]:
+        """
+        Returns addresses.
+        """
+        return self.data.get("addresses")
 
     def get_citizens(self) -> List[dict]:
         """
