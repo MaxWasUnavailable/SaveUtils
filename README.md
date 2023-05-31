@@ -41,11 +41,11 @@ Adding, removing, setting, and printing of money is supported.
 > Examples:
 > - Add 100 money to the player's money:
 > ```shell
-> saveutils.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" money -a 100
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" money -a 100
 > ```
 > - Set the player's money to 10000:
 > ```shell
-> saveutils.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" money -s 10000
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" money -s 10000
 > ```
 
 ##### Health Cheats
@@ -55,11 +55,11 @@ Adding, removing, setting, and printing of health is supported.
 > Examples:
 > - Add 0.1 health to the player's health:
 > ```shell
-> saveutils.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" health -a 0.1
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" health -a 0.1
 > ```
 > - Set the player's health to 1:
 > ```shell
-> saveutils.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" health -s 1
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" health -s 1
 > ```
 
 #### Character Migration
@@ -82,7 +82,7 @@ changed if people request it.)*
 > Example:
 > - Migrate the character from `My Save File.sod` to `My New Save File.sod`:
 > ```shell
-> saveutils.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" migrate -o "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My New Save File.sod"
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" migrate -o "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My New Save File.sod"
 > ```
 
 ##### New Game Plus
@@ -100,7 +100,7 @@ This system should make it a bit more realistic, and also make it a bit more cha
 > Example:
 > - New game plus migrate the character from `My Save File.sod` to `My New Save File.sod`:
 > ```shell
-> saveutils.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" migrate -n -o "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My New Save File.sod"
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" migrate -n -o "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My New Save File.sod"
 > ```
 
 ## Authors
