@@ -25,18 +25,30 @@ class SizeAnalysis:
         :return: A dictionary containing the percentage and absolute size of each key-value pair in the save file.
         """
         logger.info("Analysing save file size...")
-        data: dict = save.data
-        total_size = getsizeof(data)
+        total_size = SizeAnalysis.get_size(save)
         logger.info(f"Total save file size: {total_size} bytes")
 
         analysed_data: dict = dict()
-        for key, value in data.items():
+        for key, value in save.data.items():
             analysed_data[key] = {
                 "size": getsizeof(value),
                 "percentage": (getsizeof(value) / total_size) * 100
             }
 
         return analysed_data
+
+    @staticmethod
+    def get_size(save: SaveFile) -> float:
+        """
+        Gets the size of a save file.
+        :param save: The save file to get the size of.
+        :return: The size of the save file in bytes.
+        """
+        total_size = 0
+        for key, value in save.data.items():
+            total_size += getsizeof(value)
+
+        return total_size
 
 
 def register_subparser(main_subparser) -> None:
@@ -46,7 +58,7 @@ def register_subparser(main_subparser) -> None:
     """
     sizeanalysis = main_subparser.add_parser("sizeanalysis", description=description, help=description)
     sizeanalysis.add_argument('-r', '--report', action='store_true',
-                              help='Saves a report of the size analysis in report.txt')
+                              help='Saves a report of the size analysis in report.html')
 
 
 def handle_subparser(args) -> None:
@@ -57,11 +69,16 @@ def handle_subparser(args) -> None:
     if args.tool == "sizeanalysis":
         save = args.save
         analysed_data = SizeAnalysis.analyse_size(save)
+
+        sorted_data = sorted(analysed_data.items(), key=lambda x: x[1]["size"], reverse=True)
+
         if args.report:
-            with open("report.txt", "w") as report:
-                report.write(f"Total save file size: {getsizeof(save.data)} bytes\n")
-                for key, value in analysed_data.items():
-                    report.write(f"{key}: {value['size']} bytes ({value['percentage']}%)\n")
+            with open("report.html", "w") as report:
+                report.write("<html><body><table><tr><th>Key</th><th>Size</th><th>Percentage</th></tr>")
+                for key, value in sorted_data:
+                    report.write(
+                        f"<tr><td>{key}</td><td>{value['size']}</td><td>{round(value['percentage'], 3)}</td></tr>")
+                report.write("</table></body></html>")
         else:
-            for key, value in analysed_data.items():
+            for key, value in sorted_data:
                 logger.info(f"{key}: {value['size']} bytes ({value['percentage']}%)")
