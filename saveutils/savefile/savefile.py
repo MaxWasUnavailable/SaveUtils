@@ -1,4 +1,5 @@
 import json
+import shutil
 from datetime import datetime
 from logging import getLogger, StreamHandler, Formatter
 from time import time
@@ -90,6 +91,42 @@ class SaveFile:
         save = cls()
         save.parse_file(path)
         return save
+
+    def to_json_string(self) -> str:
+        """
+        Returns the save file as a JSON string.
+        """
+        try:
+            return json.dumps(self.data)
+        except Exception as e:
+            self.logger.exception(f"Failed to convert to JSON string")
+            raise e
+
+    def backup(self) -> None:
+        """
+        Creates a backup of the save file.
+        """
+        self.logger.debug(f"Creating backup of {self.path}")
+        try:
+            shutil.copy2(self.path, self.path + ".bak")
+        except Exception as e:
+            self.logger.exception(f"Failed to create backup of {self.path}")
+            raise e
+        self.logger.debug(f"Created backup of {self.path} as {self.path + '.bak'}")
+
+    def save(self) -> None:
+        """
+        Saves the save file.
+        """
+        self.backup()
+        self.logger.debug(f"Saving {self.path}")
+        try:
+            with open(self.path, "w", encoding="utf-8") as f:
+                f.write(self.to_json_string())
+        except Exception as e:
+            self.logger.exception(f"Failed to save {self.path}")
+            raise e
+        self.logger.debug(f"Saved {self.path}")
 
     def get_build(self) -> str:
         """
