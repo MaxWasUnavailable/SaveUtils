@@ -1,6 +1,14 @@
+from logging import getLogger, StreamHandler, Formatter
+
 from savefile.savefile import SaveFile
 
 description = "A collection of save game editing methods which can be considered cheats."
+
+logger = getLogger(__name__)
+logger.setLevel("INFO")
+handler = StreamHandler()
+handler.setFormatter(Formatter("[%(asctime)s][%(name)s][%(levelname)s] %(message)s"))
+logger.addHandler(handler)
 
 
 class MoneyCheats:
@@ -14,7 +22,7 @@ class MoneyCheats:
         Sets the amount of money the player has.
         """
         save.safe_set_value("money", amount)
-        print(f"Set money to {amount}")
+        logger.info(f"Set money to {amount}")
 
     @staticmethod
     def add_money(save: SaveFile, amount: int):
@@ -23,7 +31,7 @@ class MoneyCheats:
         """
         save.safe_set_value("money", save.get_value("money") + amount)
         current_money = save.get_money()
-        print(f"Added {amount} to money. Current money: {current_money}")
+        logger.info(f"Added {amount} to money. Current money: {current_money}")
 
     @staticmethod
     def remove_money(save: SaveFile, amount: int):
@@ -32,7 +40,7 @@ class MoneyCheats:
         """
         MoneyCheats.set_money(save, save.get_value("money") - amount)
         current_money = save.get_money()
-        print(f"Removed {amount} from money. Current money: {current_money}")
+        logger.info(f"Removed {amount} from money. Current money: {current_money}")
 
     @staticmethod
     def print_money(save: SaveFile):
@@ -40,21 +48,20 @@ class MoneyCheats:
         Prints the player's current amount of money.
         """
         current_money = save.get_money()
-        print(f"Current money: {current_money}")
+        logger.info(f"Current money: {current_money}")
 
 
 class HealthCheats:
     """
     A collection of health cheats.
     """
-
     @staticmethod
     def set_health(save: SaveFile, amount: int):
         """
         Sets the amount of health the player has.
         """
         save.safe_set_value("health", amount)
-        print(f"Set health to {amount}")
+        logger.info(f"Set health to {amount}")
 
     @staticmethod
     def add_health(save: SaveFile, amount: int):
@@ -63,7 +70,7 @@ class HealthCheats:
         """
         HealthCheats.set_health(save, save.get_value("health") + amount)
         current_health = save.get_health()
-        print(f"Added {amount} to health. Current health: {current_health}")
+        logger.info(f"Added {amount} to health. Current health: {current_health}")
 
     @staticmethod
     def remove_health(save: SaveFile, amount: int):
@@ -72,7 +79,7 @@ class HealthCheats:
         """
         HealthCheats.set_health(save, save.get_value("health") - amount)
         current_health = save.get_health()
-        print(f"Removed {amount} from health. Current health: {current_health}")
+        logger.info(f"Removed {amount} from health. Current health: {current_health}")
 
     @staticmethod
     def print_health(save: SaveFile):
@@ -80,4 +87,4 @@ class HealthCheats:
         Prints the player's current amount of health.
         """
         current_health = save.get_health()
-        print(f"Current health: {current_health}")
+        logger.info(f"Current health: {current_health}")
