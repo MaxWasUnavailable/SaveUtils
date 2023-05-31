@@ -1,3 +1,4 @@
+import argparse
 from logging import getLogger, StreamHandler, Formatter
 
 from savefile.savefile import SaveFile
@@ -92,7 +93,7 @@ class HealthCheats:
 
 
 # Add the cheats subparser
-def register_subparser(main_parser) -> None:
+def register_subparser(main_parser: argparse.ArgumentParser) -> None:
     """
     Registers the cheats subparser.
     :param main_parser: The main parser
@@ -123,15 +124,18 @@ def handle_subparser(args) -> None:
     Handles the cheats subparser.
     :param args: The arguments
     """
-    save = SaveFile(args.save)
+    save: SaveFile = args.save
 
     if args.cheats == "money":
         if args.add:
             MoneyCheats.add_money(save, args.amount)
+            save.save()
         elif args.remove:
             MoneyCheats.remove_money(save, args.amount)
+            save.save()
         elif args.set:
             MoneyCheats.set_money(save, args.amount)
+            save.save()
         elif args.print:
             MoneyCheats.print_money(save)
         else:
@@ -139,10 +143,13 @@ def handle_subparser(args) -> None:
     elif args.cheats == "health":
         if args.add:
             HealthCheats.add_health(save, args.amount)
+            save.save()
         elif args.remove:
             HealthCheats.remove_health(save, args.amount)
+            save.save()
         elif args.set:
             HealthCheats.set_health(save, args.amount)
+            save.save()
         elif args.print:
             HealthCheats.print_health(save)
         else:
