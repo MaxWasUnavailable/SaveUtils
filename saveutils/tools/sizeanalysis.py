@@ -11,7 +11,7 @@ description = "A tool for analysing the size of a save file."
 logger = getLogger(__name__)
 logger.setLevel("INFO")
 handler = StreamHandler()
-handler.setFormatter(Formatter("[%(asctime)s][%(name)s] %(message)s", "%m-%d %H:%M:%S"))
+handler.setFormatter(Formatter("[%(asctime)s][%(name)s][%(levelname)s] %(message)s"))
 logger.addHandler(handler)
 locale.setlocale(locale.LC_ALL, '')
 
