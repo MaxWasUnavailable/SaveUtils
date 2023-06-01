@@ -113,6 +113,7 @@ def handle_subparser(args) -> None:
                         f"\n<tr><td>{key}</td><td>{value['size']}</td><td>{round(value['percentage'], 3)}</td></tr>")
                 report.write("</table></body></html>")
         else:
+            summary = ""
             remaining_total = 0
             remaining_percent = 0
             for key, value in sorted_data:
@@ -120,6 +121,8 @@ def handle_subparser(args) -> None:
                     remaining_total += value['size']
                     remaining_percent += value['percentage']
                     continue
-                logger.info(f"{key:22} {value['size']:>12n} bytes / {value['percentage']:7.3f}%")
-            logger.info(f"sum of items < {args.cutoff:7} {remaining_total:>12n} bytes / {remaining_percent:7.3f}%")
-            logger.info("NOTE: due to conversions between raw strings and python, sizes are estimates only.")
+                summary += f"\n{key:30} {value['size']:>13n} bytes / {value['percentage']:7.3f}%"
+            cutoff = args.cutoff / 100
+            summary += f"\nsum of items < {cutoff:<15.3%} {remaining_total:>13n} bytes / {remaining_percent:7.3f}%"
+            summary += "\nNOTE: due to conversions between raw strings and python, sizes are estimates only."
+            logger.info(summary)
