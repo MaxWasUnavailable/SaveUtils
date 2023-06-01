@@ -31,10 +31,12 @@ class SizeAnalysis:
         logger.info("Analysing save file size...")
         total_size = SizeAnalysis.get_size(save)
         logger.info(f"Total save file size (APPROX): {total_size:n} bytes")
+        logger.info(f"Estimated conversion ratio is {save.get_json_raw_size_conversion_factor():.4%}")
 
         analysed_data: dict = dict()
         for key, value in save.data.items():
-            size = getsizeof(json.dumps(value)) / save.raw_size_conversion_factor
+            size = getsizeof(json.dumps(value))
+            size /= save.get_json_raw_size_conversion_factor()
             size = SizeAnalysis.trim_to_sig_figs(size)
             analysed_data[key] = {
                 "size": size,
@@ -55,7 +57,9 @@ class SizeAnalysis:
             size = getsizeof(json.dumps(value))
             total_size += size
 
-        return SizeAnalysis.trim_to_sig_figs(total_size / save.raw_size_conversion_factor)
+        total_size /= save.get_json_raw_size_conversion_factor()
+        total_size = SizeAnalysis.trim_to_sig_figs(total_size)
+        return total_size
 
     @staticmethod
     def trim_to_sig_figs(val: float, sig_figs:int = 3) -> int:
