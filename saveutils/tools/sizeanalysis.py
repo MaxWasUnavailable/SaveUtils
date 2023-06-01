@@ -35,7 +35,7 @@ class SizeAnalysis:
         analysed_data: dict = dict()
         for key, value in save.data.items():
             size = getsizeof(json.dumps(value)) / save.raw_size_conversion_factor
-            size = SizeAnalysis.SIG_FIGS(size)
+            size = SizeAnalysis.trim_to_sig_figs(size)
             analysed_data[key] = {
                 "size": size,
                 "percentage": (size / total_size) * 100
@@ -55,10 +55,10 @@ class SizeAnalysis:
             size = getsizeof(json.dumps(value))
             total_size += size
 
-        return SizeAnalysis.SIG_FIGS(total_size / save.raw_size_conversion_factor)
+        return SizeAnalysis.trim_to_sig_figs(total_size / save.raw_size_conversion_factor)
 
     @staticmethod
-    def SIG_FIGS(val: float, sig_figs:int = 3) -> int:
+    def trim_to_sig_figs(val: float, sig_figs:int = 3) -> int:
         figs = math.log10(val)
         if figs < sig_figs:
             return int(val)
