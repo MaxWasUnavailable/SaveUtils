@@ -24,6 +24,7 @@ class SaveFile:
         self.parse_time = None
         self.locked = locked
         self._raw_size_conversion_factor = 0
+        self._save_string_size = 0
 
         self.logger = None
         self.init_logger(verbose)
