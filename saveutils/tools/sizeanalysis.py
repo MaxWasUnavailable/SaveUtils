@@ -59,6 +59,12 @@ class SizeAnalysis:
 
     @staticmethod
     def trim_to_sig_figs(val: float, sig_figs:int = 3) -> int:
+        """
+        Truncates a float value to an int with a certain number of significant figures.
+        :param val: The value to truncate
+        :param sig_figs: How many significant figures to truncate to
+        :return: The truncated value as an integer
+        """
         figs = math.log10(val)
         if figs < sig_figs:
             return int(val)
