@@ -52,6 +52,8 @@ class SaveFile:
         """
         self.parse_time = time()
         self.data = json.loads(string)
+        self.raw_size_conversion_factor = len(json.dumps(self.data))/len(string)
+        self.logger.debug(f"dumped string is {self.raw_size_conversion_factor:.2%} different")
         self.parse_time = time() - self.parse_time
         self.logger.debug(f"Parse time: {self.parse_time}")
 

@@ -1,5 +1,7 @@
 from logging import getLogger, StreamHandler, Formatter
 from sys import getsizeof
+import json
+import math
 
 from savefile.savefile import SaveFile
 
@@ -26,13 +28,15 @@ class SizeAnalysis:
         """
         logger.info("Analysing save file size...")
         total_size = SizeAnalysis.get_size(save)
-        logger.info(f"Total save file size: {total_size} bytes")
+        logger.info(f"Total save file size (APPROX): {total_size} bytes")
 
         analysed_data: dict = dict()
         for key, value in save.data.items():
+            size = getsizeof(json.dumps(value)) / save.raw_size_conversion_factor
+            size = SizeAnalysis.SIG_FIGS(size)
             analysed_data[key] = {
-                "size": getsizeof(value),
-                "percentage": (getsizeof(value) / total_size) * 100
+                "size": size,
+                "percentage": (size / total_size) * 100
             }
 
         return analysed_data
@@ -46,10 +50,24 @@ class SizeAnalysis:
         """
         total_size = 0
         for key, value in save.data.items():
-            total_size += getsizeof(value)
+            size = getsizeof(json.dumps(value))
+            total_size += size
 
-        return total_size
+        return SizeAnalysis.SIG_FIGS(total_size / save.raw_size_conversion_factor)
 
+    @staticmethod
+    def SIG_FIGS(val: float, sig_figs:int = 3) -> int:
+        figs = math.log10(val)
+        if figs < sig_figs:
+            return int(val)
+        digits_to_remove = int(figs - sig_figs) + 1
+        if digits_to_remove == 0:
+            logger.info(f"{digits_to_remove} -> {val}")
+        val = int(val / 10**digits_to_remove)
+        val = val * 10**digits_to_remove
+        if digits_to_remove == 0:
+            logger.info(f"{digits_to_remove} -> {val}")
+        return int(val)
 
 def register_subparser(main_subparser) -> None:
     """
