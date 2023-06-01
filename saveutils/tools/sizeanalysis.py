@@ -1,5 +1,6 @@
 from logging import getLogger, StreamHandler, Formatter
 from sys import getsizeof
+import locale
 import json
 import math
 
@@ -10,8 +11,9 @@ description = "A tool for analysing the size of a save file."
 logger = getLogger(__name__)
 logger.setLevel("INFO")
 handler = StreamHandler()
-handler.setFormatter(Formatter("[%(asctime)s][%(name)s][%(levelname)s] %(message)s"))
+handler.setFormatter(Formatter("[%(asctime)s][%(name)s] %(message)s", "%m-%d %H:%M:%S"))
 logger.addHandler(handler)
+locale.setlocale(locale.LC_ALL, '')
 
 
 class SizeAnalysis:
@@ -28,7 +30,7 @@ class SizeAnalysis:
         """
         logger.info("Analysing save file size...")
         total_size = SizeAnalysis.get_size(save)
-        logger.info(f"Total save file size (APPROX): {total_size} bytes")
+        logger.info(f"Total save file size (APPROX): {total_size:n} bytes")
 
         analysed_data: dict = dict()
         for key, value in save.data.items():
@@ -98,5 +100,14 @@ def handle_subparser(args) -> None:
                         f"\n<tr><td>{key}</td><td>{value['size']}</td><td>{round(value['percentage'], 3)}</td></tr>")
                 report.write("</table></body></html>")
         else:
+            remaining_total = 0
+            remaining_percent = 0
+            cutoff = 0.005
             for key, value in sorted_data:
-                logger.info(f"{key}: {value['size']} bytes ({value['percentage']}%)")
+                if value['percentage'] < cutoff:
+                    remaining_total += value['size']
+                    remaining_percent += value['percentage']
+                    continue
+                logger.info(f"{key:22} {value['size']:>12n} bytes / {value['percentage']:7.3f}%")
+            logger.info(f"{f'sum of items < {cutoff}':22} {remaining_total:>12n} bytes / {remaining_percent:7.3f}%")
+            logger.info(f"NOTE: due to conversions between raw strings and python, sizes are estimates only.")
