@@ -112,4 +112,4 @@ def handle_subparser(args) -> None:
                     continue
                 logger.info(f"{key:22} {value['size']:>12n} bytes / {value['percentage']:7.3f}%")
             logger.info(f"sum of items < {args.cutoff:7} {remaining_total:>12n} bytes / {remaining_percent:7.3f}%")
-            logger.info(f"NOTE: due to conversions between raw strings and python, sizes are estimates only.")
+            logger.info("NOTE: due to conversions between raw strings and python, sizes are estimates only.")
