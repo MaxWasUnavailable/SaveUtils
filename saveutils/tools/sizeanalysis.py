@@ -79,6 +79,9 @@ def register_subparser(main_subparser) -> None:
     sizeanalysis = main_subparser.add_parser("sizeanalysis", description=description, help=description)
     sizeanalysis.add_argument('-r', '--report', action='store_true',
                               help='Saves a report of the size analysis in report.html')
+    sizeanalysis.add_argument('-c', '--cutoff', type=float, default= 0.005,
+                              help='Combine segments below this percentage of the file size into one entry. '+
+                              'Default: 0.005%%')
 
 
 def handle_subparser(args) -> None:
@@ -102,12 +105,11 @@ def handle_subparser(args) -> None:
         else:
             remaining_total = 0
             remaining_percent = 0
-            cutoff = 0.005
             for key, value in sorted_data:
-                if value['percentage'] < cutoff:
+                if value['percentage'] < args.cutoff:
                     remaining_total += value['size']
                     remaining_percent += value['percentage']
                     continue
                 logger.info(f"{key:22} {value['size']:>12n} bytes / {value['percentage']:7.3f}%")
-            logger.info(f"{f'sum of items < {cutoff}':22} {remaining_total:>12n} bytes / {remaining_percent:7.3f}%")
+            logger.info(f"sum of items < {args.cutoff:7} {remaining_total:>12n} bytes / {remaining_percent:7.3f}%")
             logger.info(f"NOTE: due to conversions between raw strings and python, sizes are estimates only.")
