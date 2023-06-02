@@ -1,5 +1,8 @@
 from logging import getLogger, StreamHandler, Formatter
 from sys import getsizeof
+import locale
+import json
+import math
 
 from savefile.savefile import SaveFile
 
@@ -10,6 +13,7 @@ logger.setLevel("INFO")
 handler = StreamHandler()
 handler.setFormatter(Formatter("[%(asctime)s][%(name)s][%(levelname)s] %(message)s"))
 logger.addHandler(handler)
+locale.setlocale(locale.LC_ALL, '')
 
 
 class SizeAnalysis:
@@ -26,13 +30,17 @@ class SizeAnalysis:
         """
         logger.info("Analysing save file size...")
         total_size = SizeAnalysis.get_size(save)
-        logger.info(f"Total save file size: {total_size} bytes")
+        logger.info(f"Total save file size (APPROX): {total_size:n} bytes")
+        logger.info(f"Estimated fudge factor is {save.get_json_raw_size_conversion_factor():.4%}")
 
         analysed_data: dict = dict()
         for key, value in save.data.items():
+            size = getsizeof(json.dumps(value))
+            size /= save.get_json_raw_size_conversion_factor()
+            size = SizeAnalysis.trim_to_sig_figs(size)
             analysed_data[key] = {
-                "size": getsizeof(value),
-                "percentage": (getsizeof(value) / total_size) * 100
+                "size": size,
+                "percentage": (size / total_size) * 100
             }
 
         return analysed_data
@@ -46,10 +54,32 @@ class SizeAnalysis:
         """
         total_size = 0
         for key, value in save.data.items():
-            total_size += getsizeof(value)
+            size = getsizeof(json.dumps(value))
+            total_size += size
 
+        total_size /= save.get_json_raw_size_conversion_factor()
+        total_size = SizeAnalysis.trim_to_sig_figs(total_size)
         return total_size
 
+    @staticmethod
+    def trim_to_sig_figs(val: float, sig_figs:int = 3) -> int:
+        """
+        Truncates a float value to an int with a certain number of significant figures.
+        :param val: The value to truncate
+        :param sig_figs: How many significant figures to truncate to
+        :return: The truncated value as an integer
+        """
+        figs = math.log10(val)
+        if figs < sig_figs:
+            return int(val)
+        digits_to_remove = int(figs - sig_figs) + 1
+        if digits_to_remove == 0:
+            logger.info(f"{digits_to_remove} -> {val}")
+        val = int(val / 10**digits_to_remove)
+        val = val * 10**digits_to_remove
+        if digits_to_remove == 0:
+            logger.info(f"{digits_to_remove} -> {val}")
+        return int(val)
 
 def register_subparser(main_subparser) -> None:
     """
@@ -59,6 +89,9 @@ def register_subparser(main_subparser) -> None:
     sizeanalysis = main_subparser.add_parser("sizeanalysis", description=description, help=description)
     sizeanalysis.add_argument('-r', '--report', action='store_true',
                               help='Saves a report of the size analysis in report.html')
+    sizeanalysis.add_argument('-c', '--cutoff', type=float, default= 0.005,
+                              help='Combine segments below this percentage of the file size into one entry. '+
+                              'Default: 0.005%%')
 
 
 def handle_subparser(args) -> None:
@@ -80,5 +113,16 @@ def handle_subparser(args) -> None:
                         f"\n<tr><td>{key}</td><td>{value['size']}</td><td>{round(value['percentage'], 3)}</td></tr>")
                 report.write("</table></body></html>")
         else:
+            summary = ""
+            remaining_total = 0
+            remaining_percent = 0
             for key, value in sorted_data:
-                logger.info(f"{key}: {value['size']} bytes ({value['percentage']}%)")
+                if value['percentage'] < args.cutoff:
+                    remaining_total += value['size']
+                    remaining_percent += value['percentage']
+                    continue
+                summary += f"\n{key:30} {value['size']:>13n} bytes / {value['percentage']:7.3f}%"
+            cutoff = args.cutoff / 100
+            summary += f"\nsum of items < {cutoff:<15.3%} {remaining_total:>13n} bytes / {remaining_percent:7.3f}%"
+            summary += "\nNOTE: due to conversions between raw strings and python, sizes are estimates only."
+            logger.info(summary)

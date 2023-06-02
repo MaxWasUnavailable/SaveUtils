@@ -23,6 +23,8 @@ class SaveFile:
         self.data = None
         self.parse_time = None
         self.locked = locked
+        self._raw_size_conversion_factor = 0
+        self._save_string_size = 0
 
         self.logger = None
         self.init_logger(verbose)
@@ -51,6 +53,7 @@ class SaveFile:
         :param string: String to parse.
         """
         self.parse_time = time()
+        self._save_string_size = len(string)
         self.data = json.loads(string)
         self.parse_time = time() - self.parse_time
         self.logger.debug(f"Parse time: {self.parse_time}")
@@ -212,6 +215,16 @@ class SaveFile:
         More common name wrapper for get_cityshare().
         """
         return self.get_cityshare()
+
+    def get_json_raw_size_conversion_factor(self):
+        """
+        Get the estimated conversion factor between the raw file length in characters and the json.dumps() string length
+        """
+        if self._raw_size_conversion_factor != 0:
+            return self._raw_size_conversion_factor
+        dump_size = len(json.dumps(self.data))
+        self._raw_size_conversion_factor = dump_size / self._save_string_size
+        return self._raw_size_conversion_factor
 
     def get_city_name(self) -> str:
         """
