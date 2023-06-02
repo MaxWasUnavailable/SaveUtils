@@ -38,7 +38,7 @@ jobs:
         with:
           nuitka-version: main
           script-name: saveutils/cli.py
-          onefile: true
+          standalone: true
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
