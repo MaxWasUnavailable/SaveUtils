@@ -31,7 +31,7 @@ class SizeAnalysis:
         logger.info("Analysing save file size...")
         total_size = SizeAnalysis.get_size(save)
         logger.info(f"Total save file size (APPROX): {total_size:n} bytes")
-        logger.info(f"Estimated conversion ratio is {save.get_json_raw_size_conversion_factor():.4%}")
+        logger.info(f"Estimated fudge factor is {save.get_json_raw_size_conversion_factor():.4%}")
 
         analysed_data: dict = dict()
         for key, value in save.data.items():
