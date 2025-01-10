@@ -2,7 +2,7 @@ from logging import getLogger, StreamHandler, Formatter
 import locale
 
 # Note. The import strategy is a bit inconsistent from the other tools.
-# We need it this way for PyTest to be happy. ~ BC
+# I needed it this way for PyTest to be happy in my environment. ~ BC
 from saveutils.savefile.savefile import SaveFile
 
 description = "A tool for changing one's primary residence."
