@@ -54,27 +54,29 @@ class ResidenceChanger:
         logger.info(f"New residence: {new_residence}")
         logger.info(f"Player owned apartments: {player_residences if len(player_residences) > 0 else "None"}")
 
-        # Sanity checks
-        if new_residence not in player_residences:
-            logger.error(f"Attempting to switch residency to apartment {new_residence} NOT owned by player.")
+        # Important conditions to check! Do NOT attempt to swap permanent residency if these conditions are true!
+        try:
+            if new_residence not in player_residences:
+                logger.error(f"Attempting to switch residency to apartment {new_residence} NOT owned by player.")
+                raise Exception
+            if cost < 0:
+                logger.error(f"Cost override is negative ({cost}). City Hall will not pay you to switch residencies.")
+                raise Exception
+            if current_residence == new_residence:
+                logger.error(f"You already live in apartment {current_residence} as your primary residency. You don't need to switch.")
+                raise Exception
+            if cost > money:
+                logger.error(f"You don't have enough money to pay the fee. Balance: {money}. Cost: {cost}. Run the command again with the -c switch to override the cost.")
+                raise Exception
+        except:
+            source_save.locked = original_locked
             return
-        if cost < 0:
-            logger.error(f"Cost override is negative ({cost}). City Hall will not pay you to switch residencies.")
-            return
-        if current_residence == new_residence:
-            logger.error(f"You already live in apartment {current_residence} as your primary residency. You don't need to switch.")
-            return
-        if cost > money:
-            logger.error(f"You don't have enough money to pay the fee. Balance: {money}. Cost: {cost}. Run the command again with the -c switch to override the cost.")
-            return
-        
-        # We're good to go
-
-        money -= cost
+        # We're good to go. Conditions passed.
         source_save.safe_set_value("residence", new_residence)
         logger.info("Residence changed.")
-        source_save.safe_set_value("money", money)
-        logger.info(f"Fee {"processed" if cost > 0 else "waived"}.")
+        source_save.safe_set_value("money", money-cost)
+        #logger.info(f"Fee {"processed{money-cost}" if cost > 0 else "waived"}.")
+        logger.info(f"Fee processed ({money-cost} remaining)" if cost > 0 else 'Fee waived')
         source_save.locked = original_locked
         source_save.save()
         logger.info("File saved.")
