@@ -15,7 +15,6 @@ class TestResidenceChanger(unittest.TestCase):
     cost_free = 0
     cost_custom = 50
     original_apartment = 500
-    duplicate_apartment = 500
     nonplayer_apartment = 444
     new_apartment = 600
     owned_apartments = [500, 600, 700, 800]
@@ -32,14 +31,18 @@ class TestResidenceChanger(unittest.TestCase):
 
     def test_initialisation(self):
         """
-        Tests that the init, from_file, and from_string initialisation methods work as expected and are equivalent.
+        Tests that some of the values we're using make sense in case they get changed
         """
         self.assertLess(ResidenceChanger.DEFAULT_COST, self.default_money)
-        self.assertGreater(self.cost_excessive, self.default_money)
+        self.assertLess(self.default_money, self.cost_excessive)
+        self.assertLess(self.cost_custom, self.default_money)
+        self.assertIn(self.original_apartment, self.owned_apartments)
+        self.assertIn(self.new_apartment, self.owned_apartments)
+        self.assertNotIn(self.nonplayer_apartment, self.owned_apartments)
 
     def test_cost_excessive(self):
         """
-        Tests some methods which get save meta information.
+        Tests that we catch if the cost to change residency exceeds the player's funds
         """
         ResidenceChanger.change_residence(self.savefile, self.new_apartment, self.cost_excessive, skipSave=True)
         self.assertEqual(self.savefile.get_residence(), self.original_apartment)
@@ -47,7 +50,7 @@ class TestResidenceChanger(unittest.TestCase):
 
     def test_cost_negative(self):
         """
-        Tests some methods which get save meta information.
+        Tests if the user is trying to pay a negative amount (ie. get money back)
         """
         ResidenceChanger.change_residence(self.savefile, self.new_apartment, self.cost_negative, skipSave=True)
         self.assertEqual(self.savefile.get_residence(), self.original_apartment)
@@ -55,7 +58,7 @@ class TestResidenceChanger(unittest.TestCase):
 
     def test_waivefee(self):
         """
-        Tests some methods which get save meta information.
+        Tests that we can skip the fee and not get charged
         """
         ResidenceChanger.change_residence(self.savefile, self.new_apartment, self.cost_free, skipSave=True)
         self.assertEqual(self.savefile.get_residence(), self.new_apartment)
@@ -63,7 +66,7 @@ class TestResidenceChanger(unittest.TestCase):
     
     def test_nonplayerapartment(self):
         """
-        Tests some methods which get save meta information.
+        Tests trying to claim an unowned apartment
         """
         ResidenceChanger.change_residence(self.savefile, self.nonplayer_apartment, skipSave=True)
         self.assertEqual(self.savefile.get_residence(), self.original_apartment)
@@ -71,15 +74,15 @@ class TestResidenceChanger(unittest.TestCase):
     
     def test_alreadyresidency(self):
         """
-        Tests some methods which get save meta information.
+        Tests if we're trying to move to the same apartment
         """
-        ResidenceChanger.change_residence(self.savefile, self.duplicate_apartment, skipSave=True)
-        self.assertEqual(self.savefile.get_residence(), self.duplicate_apartment)
+        ResidenceChanger.change_residence(self.savefile, self.original_apartment, skipSave=True)
+        self.assertEqual(self.savefile.get_residence(), self.original_apartment)
         self.assertEqual(self.savefile.get_money(), self.default_money)
 
     def test_customfee(self):
         """
-        Tests some methods which get save meta information.
+        Tests adjusting the fee
         """
         ResidenceChanger.change_residence(self.savefile, self.new_apartment, self.cost_custom, skipSave=True)
         self.assertEqual(self.savefile.get_residence(), self.new_apartment)
@@ -87,7 +90,7 @@ class TestResidenceChanger(unittest.TestCase):
 
     def test_default(self):
         """
-        Tests some methods which get save meta information.
+        Tests moving to a new apartment with the default fee
         """
         ResidenceChanger.change_residence(self.savefile, self.new_apartment, skipSave=True)
         self.assertEqual(self.savefile.get_residence(), self.new_apartment)
