@@ -1,8 +1,5 @@
 from logging import getLogger, StreamHandler, Formatter
-from sys import getsizeof
 import locale
-import json
-import math
 
 from savefile.savefile import SaveFile
 
@@ -75,12 +72,12 @@ class ResidenceChanger:
 
         money -= cost
         source_save.safe_set_value("residence", new_residence)
-        logger.info(f"Residence changed.")
+        logger.info("Residence changed.")
         source_save.safe_set_value("money", money)
-        logger.info(f"Fee processed.")
+        logger.info(f"Fee {"processed" if cost > 0 else "waived"}.")
         source_save.locked = original_locked
         source_save.save()
-        logger.info(f"File saved.")
+        logger.info("File saved.")
 
 def register_subparser(main_subparser) -> None:
     """
@@ -97,10 +94,7 @@ def handle_subparser(args) -> None:
     :param args: The arguments
     """
     if args.tool == "residence":
-        source_save = args.save
-        target_save = SaveFile(args.output, args.verbose)
-
         if args.set:
-            ResidenceChanger.change_residence(source_save, args.set, args.cost)
+            ResidenceChanger.change_residence(args.save, args.set, args.cost)
         else:
-            ResidenceChanger.output_residencies(source_save)
+            ResidenceChanger.output_residencies(args.save)
