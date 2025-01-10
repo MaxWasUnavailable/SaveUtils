@@ -54,7 +54,8 @@ class ResidenceChanger:
         logger.info(f"New residence: {new_residence}")
         logger.info(f"Player owned apartments: {player_residences if len(player_residences) > 0 else "None"}")
 
-        # Important conditions to check! Do NOT attempt to swap permanent residency if any of these conditions are true!
+        # Important conditions to check!
+        # Do NOT attempt to swap permanent residency if any of these conditions are true!
         try:
             if new_residence not in player_residences:
                 logger.error(f"Attempting to switch residency to apartment {new_residence} NOT owned by player.")
@@ -69,6 +70,9 @@ class ResidenceChanger:
                 logger.error(f"You don't have enough money to pay the fee. Balance: {money}. Cost: {cost}. Run the command again with the -c switch to override the cost.")
                 raise Exception
         except:
+            # If we are here, then one of the above conditions are met.
+            # We logged the error already.
+            # We just need to do cleanup here and return
             source_save.locked = original_locked
             return
         # We're good to go. Conditions passed. Change the residency.
