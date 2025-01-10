@@ -1,7 +1,9 @@
 from logging import getLogger, StreamHandler, Formatter
 import locale
 
-from savefile.savefile import SaveFile
+# Note. The import strategy is a bit inconsistent from the other tools.
+# We need it this way for PyTest to be happy. ~ BC
+from saveutils.savefile.savefile import SaveFile
 
 description = "A tool for changing one's primary residence."
 
@@ -16,7 +18,7 @@ class ResidenceChanger:
     """
     A tool for changing one's primary residence.
     """
-    default_cost = 20
+    DEFAULT_COST = 20
 
     @staticmethod
     def output_residencies(source_save : SaveFile):
@@ -36,7 +38,7 @@ class ResidenceChanger:
 
 
     @staticmethod
-    def change_residence(source_save : SaveFile, new_residence : int, cost : int):
+    def change_residence(source_save : SaveFile, new_residence : int, cost : int = DEFAULT_COST, target_save : SaveFile = None, skipSave : bool = False):
         """
         Changes the player's residence to one available
         """
@@ -81,7 +83,8 @@ class ResidenceChanger:
         source_save.safe_set_value("money", money-cost)
         logger.info(f"Fee processed ({money-cost} remaining)" if cost > 0 else 'Fee waived')
         source_save.locked = original_locked
-        source_save.save()
+        if not skipSave: # For testing purposes, we have the option to skip writing to the file
+            source_save.save(target_save)
         logger.info("File saved.")
 
 def register_subparser(main_subparser) -> None:
@@ -91,7 +94,7 @@ def register_subparser(main_subparser) -> None:
     """
     residence_parser = main_subparser.add_parser("residence", help=description, description=description)
     residence_parser.add_argument("-s", "--set", type=int, help="Set the player's primary residence to this ID")
-    residence_parser.add_argument('-c', '--cost', type=int, default=ResidenceChanger.default_cost, help=f"Override the default cost of {ResidenceChanger.default_cost}cr for the residency change.")
+    residence_parser.add_argument('-c', '--cost', type=int, default=ResidenceChanger.DEFAULT_COST, help=f"Override the default cost of {ResidenceChanger.DEFAULT_COST}cr for the residency change.")
 
 def handle_subparser(args) -> None:
     """
