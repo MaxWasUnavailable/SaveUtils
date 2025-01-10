@@ -54,7 +54,7 @@ class ResidenceChanger:
         logger.info(f"New residence: {new_residence}")
         logger.info(f"Player owned apartments: {player_residences if len(player_residences) > 0 else "None"}")
 
-        # Important conditions to check! Do NOT attempt to swap permanent residency if these conditions are true!
+        # Important conditions to check! Do NOT attempt to swap permanent residency if any of these conditions are true!
         try:
             if new_residence not in player_residences:
                 logger.error(f"Attempting to switch residency to apartment {new_residence} NOT owned by player.")
@@ -71,11 +71,10 @@ class ResidenceChanger:
         except:
             source_save.locked = original_locked
             return
-        # We're good to go. Conditions passed.
+        # We're good to go. Conditions passed. Change the residency.
         source_save.safe_set_value("residence", new_residence)
         logger.info("Residence changed.")
         source_save.safe_set_value("money", money-cost)
-        #logger.info(f"Fee {"processed{money-cost}" if cost > 0 else "waived"}.")
         logger.info(f"Fee processed ({money-cost} remaining)" if cost > 0 else 'Fee waived')
         source_save.locked = original_locked
         source_save.save()
