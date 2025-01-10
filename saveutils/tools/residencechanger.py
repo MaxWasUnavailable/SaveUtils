@@ -85,7 +85,7 @@ def register_subparser(main_subparser) -> None:
     :param main_subparser: The main parser's subparser
     """
     residence_parser = main_subparser.add_parser("residence", help=description, description=description)
-    residence_parser.add_argument("-s", "--set", type=int, help="Set the amount of health your character has")
+    residence_parser.add_argument("-s", "--set", type=int, help="Set the player's primary residence to this ID")
     residence_parser.add_argument('-c', '--cost', type=int, default=ResidenceChanger.default_cost, help=f"Override the default cost of {ResidenceChanger.default_cost}cr for the residency change.")
 
 def handle_subparser(args) -> None:
