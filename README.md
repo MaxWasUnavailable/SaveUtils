@@ -123,6 +123,32 @@ This allows us to very easily see which sections of the save file take up the mo
 > cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" sizeanalysis -r
 > ```
 
+#### Residence Changer
+
+This tool allows a player to move his primary residence to any of his currently owned apartments.
+
+Apartments have a unique integer ID. By default, the list of IDs of the player's currently owned apartments are simply printed, and no change to residency is made. If you specify the `--set` flag, then an attempt is made to switch the primary residency of the player to the specified ID.
+
+> Example:
+> - Printing the list of your owned apartments in `My Save File.sod`:
+> ```shell
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" residence
+> ```
+>> - Setting your primary residence to apartment ID 400:
+> ```shell
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" residence --set 400
+> ```
+
+Note, by default, you are charged 20cr by this tool for each permanent residence change you make. This is meant to simulate a processing fee by City Hall. If you wish to change the fee, use the `--cost` flag.
+
+> Example:
+> - Setting your apartment to ID 280 for free:
+> ```shell
+> cli.exe -i "C:\Users\max\AppData\LocalLow\ColePowered Games\Shadows of Doubt\Save\My Save File.sod" residence --set 400 --cost 0
+> ```
+
+Currently, there is no way to know which ID corresponds to which apartment, although they will be stored in the list in the order that you purchased them from oldest to newest.
+
 ## Contributing
 
 Contributions are welcome, and can be made by opening a pull request.
